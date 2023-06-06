@@ -3,34 +3,40 @@ const Joi = require("joi");
 
 const { handleMongooseError } = require("../helpers");
 
-const contactSchema = new Schema({
-  name: {
-    type: String,
-    required: [true, "Set name for contact"],
+const phoneRegexp = /^\(\d{3}\) \d{3}-\d{4}$/;
+
+const contactSchema = new Schema(
+  {
+    name: {
+      type: String,
+      required: [true, "Set name for contact"],
+    },
+    email: {
+      type: String,
+      required: true,
+    },
+    phone: {
+      type: String,
+      match: phoneRegexp,
+      required: true,
+    },
+    favorite: {
+      type: Boolean,
+      default: false,
+    },
+    owner: {
+      type: Schema.Types.ObjectId,
+      ref: "user",
+      required: true,
+    },
   },
-  email: {
-    type: String,
-  },
-  phone: {
-    type: String,
-  },
-  favorite: {
-    type: Boolean,
-    default: false,
-  },
-  owner: {
-    type: Schema.Types.ObjectId,
-    ref: "user",
-    required: true,
-  },
-});
+  { versionKey: false, timestamps: true }
+);
 
 const contactAddSchema = Joi.object({
   name: Joi.string().required(),
   email: Joi.string().email().required(),
-  phone: Joi.string()
-    .regex(/^\(\d{3}\) \d{3}-\d{4}$/)
-    .required(),
+  phone: Joi.string().regex(phoneRegexp).required(),
   favorite: Joi.boolean(),
 });
 
