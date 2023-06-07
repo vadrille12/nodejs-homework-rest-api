@@ -15,16 +15,20 @@ const userSchema = new Schema(
       type: String,
       match: emailRegexp,
       unique: true,
-      required: true,
+      required: [true, "Email is required"],
     },
     password: {
       type: String,
       minlength: 6,
-      required: true,
+      required: [true, "Set password for user"],
     },
     token: {
       type: String,
       default: "",
+    },
+    avatarURL: {
+      type: String,
+      required: true,
     },
   },
   { versionKey: false, timestamps: true }
